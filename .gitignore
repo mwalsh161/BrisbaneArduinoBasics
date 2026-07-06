@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Arduino build output
+build/
+*.elf
+*.hex
+*.bin
+*.map
+
+# VS Code (keep c_cpp_properties.json for IntelliSense config)
+.vscode/settings.json
+.vscode/launch.json
+
+# Temp / editor
+*.swp
+*.swo
+*~
