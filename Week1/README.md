@@ -54,6 +54,8 @@ This is called **digital** because it uses discrete values, not a continuous ran
 
 A **digital output** pin on the Arduino can be switched between HIGH and LOW by your program. Connect an LED to one and you can turn it on and off in software.
 
+Pins that haven't been configured sit in a third condition: **floating**. A floating pin has no stable value — it isn't driven HIGH or LOW, so it picks up electrical noise and behaves unpredictably. That's why `setup()` always calls `pinMode()` before a pin is used: it takes the pin out of that undefined state and tells the chip whether to drive it (OUTPUT) or listen on it (INPUT).
+
 **Analog** signals, by contrast, can take any value in a range (like the volume knob on a stereo). We'll look at reading analog values in Week 2.
 
 ---
@@ -122,7 +124,7 @@ To upload: connect via USB, select your board and port, click **Upload**. The ID
 
 ## Activity 1 — Blink
 
-The "Hello, World" of hardware. Make the built-in LED on pin 13 blink.
+The "Hello, World" of hardware. Make the built-in LED blink using the `LED_BUILTIN` alias (pin 13 on the Uno, but the alias works on any Arduino board).
 
 Sketch: [blink/blink.ino](blink/blink.ino)
 
@@ -192,7 +194,16 @@ Sketch: [led_pattern/led_pattern.ino](led_pattern/led_pattern.ino)
 | Current | Flow of charge (A) |
 | Resistance | Opposition to flow (Ω) |
 | HIGH / LOW | Digital states: ~5V / 0V |
-| `pinMode()` | Configures a pin as INPUT or OUTPUT |
+| `pinMode()` | Configures a pin as INPUT or OUTPUT; until called, pins are floating (no stable value) |
 | `digitalWrite()` | Sets a digital pin HIGH or LOW |
 | `delay()` | Pauses the program for a number of milliseconds |
 | Sketch | An Arduino program |
+
+---
+
+> **Tip — clearing a board:** Uploading an empty sketch resets the board completely and removes any pre-loaded program:
+> ```cpp
+> void setup() {}
+> void loop() {}
+> ```
+> With nothing configured, all pins sit in their default floating state. You may notice the built-in LED glowing faintly or flickering as you hold the board — that's floating in action. Your body acts as an antenna, picking up mains noise (60Hz) and inducing enough voltage on the undriven pin to partially light the LED. Adding `pinMode(LED_BUILTIN, OUTPUT)` in `setup()` immediately stops it.
