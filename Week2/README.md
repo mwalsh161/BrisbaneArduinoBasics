@@ -44,6 +44,8 @@ Connect one leg of the button to **pin 13** and the other to **GND**. Connect an
 
 No external resistor on the button — we will handle that in the code.
 
+> **Resistor recap:** V = IR means I = V / R. At 5V with a 220Ω resistor: I = 5 / 220 ≈ 22mA — right in the safe range for an LED. Remove the resistor and nothing limits the current; it climbs until the LED burns out.
+
 ### Code it
 
 Type along: [button_led/button_led.ino](button_led/button_led.ino)
@@ -142,6 +144,8 @@ Open [pot_read/pot_read.ino](pot_read/pot_read.ino) and change `A1` to `A5` — 
 > V = 5V x R_fixed / (R_LDR + R_fixed)
 > ```
 >
+> This is V = IR applied twice. Both resistors carry the same current (they are in series), so each one drops a voltage proportional to its share of the total resistance — the same idea as the LED resistor, just rearranged to produce a measurable voltage instead of limiting current.
+>
 > In total darkness R_LDR is very large (MΩ range), so R_fixed is tiny by comparison and V approaches 0V. In bright light R_LDR drops (a few hundred Ω), so V rises toward 5V. But under normal room conditions neither extreme is ever reached — which is why you see something like 200–800 instead of 0–1023. The voltage never touches the rails.
 >
 > The fixed resistor's value sets the sensitive midpoint: a larger value makes the circuit more sensitive to dim light; a smaller value shifts sensitivity toward bright scenes. That is why we use the plotter to find the actual range before picking a threshold — the numbers depend on your specific sensor *and* your room.
@@ -187,3 +191,60 @@ Open the Serial Plotter — you should see two lines: the live light reading and
 | `map()` | Rescale a number from one range to another |
 | Threshold | A cutoff value used to make a decision |
 | Voltage divider | Two resistors in series; the midpoint voltage depends on their ratio |
+
+---
+
+## Want to go further?
+
+If you finish early or want something to tinker with before Week 3, try this.
+
+You used `analogRead()` today to read a value from the pot. There is a matching function called `analogWrite()`. Open `pot_read.ino` and replace the body of `loop()` with this single line:
+
+```cpp
+analogWrite(11, map(analogRead(A1), 0, 1023, 0, 255));
+```
+
+Turn the knob. The LED brightness follows it.
+
+If that raises a question — pin 11 is a *digital* pin, so how does turning a knob change the LED brightness? — hold onto it. Week 3 shows exactly how it works.
+
+---
+
+## Appendix — Deriving the voltage divider formula
+
+The LDR circuit uses this formula:
+
+```
+V = 5V x R_fixed / (R_LDR + R_fixed)
+```
+
+Here is where it comes from, one step at a time.
+
+**Setup:** two resistors wired end-to-end between 5V and GND, with a measurement point (A5) between them.
+
+```
+5V --- R_LDR --- A5 --- R_fixed --- GND
+```
+
+**Step 1 — find the current.**
+
+Because the resistors are in series, the same current flows through both. The total resistance is R_LDR + R_fixed, so by Ohm's Law:
+
+```
+I = V_supply / R_total
+I = 5V / (R_LDR + R_fixed)
+```
+
+**Step 2 — find the voltage across R_fixed.**
+
+A5 sits between R_fixed and GND. The voltage there equals the voltage dropped across R_fixed alone. Apply Ohm's Law to just that resistor:
+
+```
+V_A5 = I x R_fixed
+     = 5V / (R_LDR + R_fixed)  x  R_fixed
+     = 5V x R_fixed / (R_LDR + R_fixed)
+```
+
+That is the formula. Nothing new — just V = IR applied twice to the same current.
+
+**Why it is useful:** R_LDR changes with light. As it changes, I changes, and so does V_A5. The Arduino reads that shifting voltage and infers the light level. The fixed resistor's job is to set the scale — it determines how sensitive the voltage swing is to changes in the LDR.

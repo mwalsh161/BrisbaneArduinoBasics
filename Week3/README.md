@@ -68,7 +68,7 @@ Sketch: [pwm_analog_write/pwm_analog_write.ino](pwm_analog_write/pwm_analog_writ
 
 Same fade as the software version — in a handful of lines.
 
-> **Note:** Despite the name, `analogWrite()` does not produce a true analog voltage. It's still a digital signal, pulsing at ~490 Hz. The hardware just does the toggling so you don't have to.
+> **Note:** Despite the name, `analogWrite()` is still pulsing the pin on and off at ~490 Hz. But LEDs and motors only care about average power, so the result is real brightness and real speed control. The hardware just does the toggling so you don't have to.
 
 ---
 
@@ -140,7 +140,7 @@ This introduces **edge detection** — responding to a change in state rather th
 
 | Term | Meaning |
 |------|---------|
-| PWM | Pulse Width Modulation — simulates analog output by pulsing a digital pin |
+| PWM | Pulse Width Modulation — pulses a digital pin on and off very fast; LEDs and motors respond to the average power, so varying the pulse width gives real control over brightness and speed |
 | Duty cycle | Fraction of time a PWM signal spends HIGH |
 | `analogWrite()` | Set PWM duty cycle (0–255) on a PWM-capable pin |
 | `constrain()` | Clamp a value to a min/max range |
