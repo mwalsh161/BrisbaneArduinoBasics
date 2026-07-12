@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flash to Arduino",
+      "type": "shell",
+      "command": "./build.sh '${relativeFile}' && ./upload.sh 'build/${relativeFileDirname}/${fileBasenameNoExtension}.hex'",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+<svg width="560" height="350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="lgt" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#d97706"/>
+    </marker>
+  </defs>
+  <rect width="560" height="350" fill="white"/>
+  <style>
+    text { font-family: sans-serif; fill: #1a1a1a; font-size: 13px; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .comp { stroke: #1a1a1a; stroke-width: 1.5; fill: #f9fafb; }
+    .lbl  { font-size: 12px; }
+    .sub  { font-size: 10px; fill: #6b7280; }
+    .vout { fill: #2563eb; font-size: 12px; font-weight: bold; }
+    .dim  { fill: #6b7280; font-size: 11px; }
+  </style>
+
+  <!-- === PANEL 1: Generic voltage divider === -->
+  <text x="93" y="18" text-anchor="middle" font-weight="bold">Voltage Divider</text>
+  <text x="93" y="46" text-anchor="middle" font-weight="bold">5V</text>
+  <line x1="93" y1="50" x2="93" y2="80" class="wire"/>
+  <rect x="75" y="80" width="36" height="52" rx="3" class="comp"/>
+  <text x="93" y="110" text-anchor="middle" class="lbl">R1</text>
+  <line x1="93" y1="132" x2="93" y2="153" class="wire"/>
+  <circle cx="93" cy="153" r="3.5" fill="#1a1a1a"/>
+  <line x1="93" y1="153" x2="133" y2="153" class="wire"/>
+  <text x="137" y="158" class="vout">Vout</text>
+  <line x1="93" y1="153" x2="93" y2="174" class="wire"/>
+  <rect x="75" y="174" width="36" height="52" rx="3" class="comp"/>
+  <text x="93" y="204" text-anchor="middle" class="lbl">R2</text>
+  <line x1="93" y1="226" x2="93" y2="248" class="wire"/>
+  <line x1="75" y1="248" x2="111" y2="248" class="wire"/>
+  <line x1="81" y1="254" x2="105" y2="254" class="wire"/>
+  <line x1="87" y1="260" x2="99"  y2="260" class="wire"/>
+  <text x="93" y="292" text-anchor="middle" class="dim">Vout = 5V x R2 / (R1 + R2)</text>
+
+  <!-- === PANEL 2: Potentiometer === -->
+  <text x="280" y="18" text-anchor="middle" font-weight="bold">Potentiometer</text>
+  <text x="280" y="46" text-anchor="middle" font-weight="bold">5V</text>
+  <line x1="280" y1="50" x2="280" y2="80" class="wire"/>
+  <rect x="262" y="80" width="36" height="52" rx="3" class="comp"/>
+  <text x="280" y="109" text-anchor="middle" class="lbl">R1</text>
+  <text x="258" y="110" text-anchor="end" class="sub">upper half</text>
+  <line x1="280" y1="132" x2="280" y2="153" class="wire"/>
+  <circle cx="280" cy="153" r="3.5" fill="#1a1a1a"/>
+  <text x="267" y="148" text-anchor="end" class="sub">wiper</text>
+  <line x1="280" y1="153" x2="320" y2="153" class="wire"/>
+  <text x="324" y="158" class="vout">Vout</text>
+  <line x1="280" y1="153" x2="280" y2="174" class="wire"/>
+  <rect x="262" y="174" width="36" height="52" rx="3" class="comp"/>
+  <text x="280" y="203" text-anchor="middle" class="lbl">R2</text>
+  <text x="258" y="204" text-anchor="end" class="sub">lower half</text>
+  <line x1="280" y1="226" x2="280" y2="248" class="wire"/>
+  <line x1="262" y1="248" x2="298" y2="248" class="wire"/>
+  <line x1="268" y1="254" x2="292" y2="254" class="wire"/>
+  <line x1="274" y1="260" x2="286" y2="260" class="wire"/>
+  <text x="280" y="292" text-anchor="middle" class="dim">Turn knob: R1 up, R2 down</text>
+  <text x="280" y="307" text-anchor="middle" class="dim">R1+R2 = constant (0V to 5V)</text>
+
+  <!-- === PANEL 3: LDR circuit === -->
+  <text x="467" y="18" text-anchor="middle" font-weight="bold">LDR Circuit</text>
+  <text x="467" y="46" text-anchor="middle" font-weight="bold">5V</text>
+  <line x1="467" y1="50" x2="467" y2="80" class="wire"/>
+  <rect x="449" y="80" width="36" height="52" rx="3" class="comp"/>
+  <text x="467" y="109" text-anchor="middle" class="lbl">LDR</text>
+  <text x="445" y="110" text-anchor="end" class="sub">R1, variable</text>
+  <!-- light arrows from right into LDR -->
+  <line x1="508" y1="82" x2="487" y2="91"  stroke="#d97706" stroke-width="1.5" marker-end="url(#lgt)"/>
+  <line x1="511" y1="96" x2="487" y2="100" stroke="#d97706" stroke-width="1.5" marker-end="url(#lgt)"/>
+  <line x1="508" y1="110" x2="487" y2="114" stroke="#d97706" stroke-width="1.5" marker-end="url(#lgt)"/>
+  <text x="528" y="100" text-anchor="middle" fill="#d97706" font-size="11">light</text>
+  <line x1="467" y1="132" x2="467" y2="153" class="wire"/>
+  <circle cx="467" cy="153" r="3.5" fill="#1a1a1a"/>
+  <line x1="467" y1="153" x2="507" y2="153" class="wire"/>
+  <text x="511" y="158" class="vout">Vout</text>
+  <line x1="467" y1="153" x2="467" y2="174" class="wire"/>
+  <rect x="449" y="174" width="36" height="52" rx="3" class="comp"/>
+  <text x="467" y="197" text-anchor="middle" class="lbl">10k</text>
+  <text x="467" y="212" text-anchor="middle" class="lbl">ohm</text>
+  <text x="445" y="204" text-anchor="end" class="sub">R2, fixed</text>
+  <line x1="467" y1="226" x2="467" y2="248" class="wire"/>
+  <line x1="449" y1="248" x2="485" y2="248" class="wire"/>
+  <line x1="455" y1="254" x2="479" y2="254" class="wire"/>
+  <line x1="461" y1="260" x2="473" y2="260" class="wire"/>
+  <text x="467" y="292" text-anchor="middle" class="dim">Bright: R1 low -- Vout high</text>
+  <text x="467" y="307" text-anchor="middle" class="dim">Dark: R1 high -- Vout low</text>
+  <text x="467" y="322" text-anchor="middle" class="dim">R1 != 0: range is narrower</text>
+</svg>

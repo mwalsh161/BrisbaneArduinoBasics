@@ -74,13 +74,15 @@ Same fade as the software version — in a handful of lines.
 
 ## Light Sensor
 
-Wire a photoresistor (LDR) and 10kΩ resistor as a voltage divider on A0 (same as Week 2).
+Your LDR is already wired to A5 from Week 2 — no changes needed.
 
 Read the light level and print it to the Serial Monitor to understand the range in your environment:
 
 Sketch: [light_sensor_read/light_sensor_read.ino](light_sensor_read/light_sensor_read.ino)
 
 Note the readings in bright light and when you cover the sensor with your hand. These will be your calibration reference.
+
+> The range you see here (e.g. 200–800) is narrower than the pot's 0–1023 — neither resistor in the LDR circuit can reach 0Ω under normal room conditions, so the voltage never touches the rails. (Week 2 section 4 has the full explanation if you are curious.)
 
 ---
 
