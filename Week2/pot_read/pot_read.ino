@@ -1,2 +1,9 @@
-// Week2/pot_read/pot_read.ino
-// TODO: Complete this sketch together during the session.
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A1);
+  Serial.println(value);
+  delay(100);
+}

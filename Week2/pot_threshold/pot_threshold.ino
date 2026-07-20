@@ -1,6 +1,6 @@
 int LED_PIN   = 11;
+int POT_PIN   = A1;
 int LIGHT_PIN = A5;
-int THRESHOLD = 400;
 
 void setup() {
   pinMode(LED_PIN, OUTPUT);
@@ -8,10 +8,14 @@ void setup() {
 }
 
 void loop() {
-  int light = analogRead(LIGHT_PIN);
-  Serial.println(light);
+  int threshold = analogRead(POT_PIN);
+  int light     = analogRead(LIGHT_PIN);
 
-  if (light < THRESHOLD) {
+  Serial.print(light);
+  Serial.print(",");
+  Serial.println(threshold);
+
+  if (light < threshold) {
     digitalWrite(LED_PIN, HIGH);
   } else {
     digitalWrite(LED_PIN, LOW);

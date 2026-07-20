@@ -15,124 +15,103 @@ This week we combine both into a device that actually does something useful.
 
 ---
 
-## PWM — Controlling Brightness
-
-*(Instructor-led demo — students observe)*
-
-Last week the auto-on night light could only switch the LED fully on or off. To make brightness track the light level smoothly we need a different technique: **Pulse Width Modulation (PWM)**.
-
-### Step 1 — The pulsing loop
-
-A fast on/off loop — the same as Blink from Week 1, just much faster:
-
-Sketch: [pwm_flicker/pwm_flicker.ino](pwm_flicker/pwm_flicker.ino)
-
-At 50 Hz the LED flickers noticeably. Halve the delays — the flicker fades. Halve again — almost gone. The LED is pulsing the whole time; it only looks steady when the pulses are too fast to see.
-
-> **Demo:** Record in slow-motion (120 fps+) to see the individual on/off pulses clearly.
-
-### Step 2 — Duty cycle
-
-Keep the total period fixed. Change the on/off ratio — the **duty cycle**:
-
-Sketch: [pwm_duty_cycle/pwm_duty_cycle.ino](pwm_duty_cycle/pwm_duty_cycle.ino)
-
-`ON_MS + OFF_MS` stays at 20 ms throughout. Try:
-- `ON_MS = 2, OFF_MS = 18` — very dim (10%)
-- `ON_MS = 10, OFF_MS = 10` — half brightness (50%)
-- `ON_MS = 18, OFF_MS = 2` — near full (90%)
-
-```
-100% duty cycle:  ████████████  (always on, full brightness)
- 50% duty cycle:  ██░░██░░██░░  (half brightness)
- 25% duty cycle:  █░░░█░░░█░░░  (quarter brightness)
-```
-
-### Step 3 — Full software fade
-
-Now vary the duty cycle continuously to fade in and out:
-
-Sketch: [pwm_soft_fade/pwm_soft_fade.ino](pwm_soft_fade/pwm_soft_fade.ino)
-
-It works — but the MCU is doing nothing but toggle a pin. It can't read a sensor or respond to a button while this runs.
-
-### Step 4 — Hardware PWM
-
-Six pins (marked `~` on the board: 3, 5, 6, 9, 10, 11) have dedicated hardware timers. Set the duty cycle once; the hardware handles the pulsing. The MCU is free.
-
-```cpp
-analogWrite(9, 128);  // 0 = off, 255 = full brightness, 128 = ~50%.
-```
-
-Sketch: [pwm_analog_write/pwm_analog_write.ino](pwm_analog_write/pwm_analog_write.ino)
-
-Same fade as the software version — in a handful of lines.
-
-> **Note:** Despite the name, `analogWrite()` is still pulsing the pin on and off at ~490 Hz. But LEDs and motors only care about average power, so the result is real brightness and real speed control. The hardware just does the toggling so you don't have to.
-
----
-
 ## Light Sensor
 
-Your LDR is already wired to A5 from Week 2 — no changes needed.
+Your board is pre-wired — LDR on A5, button on pin 13, LED on pin 11, pot on A1.
 
-Read the light level and print it to the Serial Monitor to understand the range in your environment:
+![Button on pin 13, LED on pin 11, pot on A1, LDR on A5](../Week2/assets/button_pot_LDR.png)
 
-Sketch: [light_sensor_read/light_sensor_read.ino](light_sensor_read/light_sensor_read.ino)
+Open the Serial Plotter (Tools → Serial Plotter) and move your hand over the sensor — you can see your range visually as the line rises and falls. Note the value when you fully cover the sensor and the value in normal room light. These are your **LO** and **HI** values; write them down — you will plug them into sketches later.
 
-Note the readings in bright light and when you cover the sensor with your hand. These will be your calibration reference.
-
-> The range you see here (e.g. 200–800) is narrower than the pot's 0–1023 — neither resistor in the LDR circuit can reach 0Ω under normal room conditions, so the voltage never touches the rails. (Week 2 section 4 has the full explanation if you are curious.)
+Try writing the sketch yourself, then check your work:
+Reference: [light_sensor_read/light_sensor_read.ino](light_sensor_read/light_sensor_read.ino)
 
 ---
 
 ## Auto-on in Darkness
 
-Combine the light reading with PWM output:
-
-Sketch: [auto_on/auto_on.ino](auto_on/auto_on.ino)
+Use a threshold to make a decision: turn the LED on when it gets dark.
 
 **Try it:** Cover the sensor with your hand — the LED turns on. Uncover it — the LED turns off.
 
----
+**Challenge:** Adjust `THRESHOLD` so the LED only turns on when it gets very dark.
 
-## Manual Override Button
-
-A useful night light needs a way to override the automatic mode. Wire a button to pin 2 with `INPUT_PULLUP`.
-
-Logic:
-- If the button is held → LED on regardless of light level.
-- Otherwise → automatic mode (light sensor controls LED).
-
-Sketch: [manual_override/manual_override.ino](manual_override/manual_override.ino)
+Try writing the sketch yourself, then check your work:
+Reference: [auto_on/auto_on.ino](auto_on/auto_on.ino)
 
 ---
 
-## Activity — Auto brightness
+## Auto Brightness
 
-Rather than a simple on/off, map the light level directly to LED brightness so the LED gets brighter as the room gets darker.
+Rather than fully on or fully off, make the LED get brighter as the room gets darker.
 
-Sketch: [auto_brightness/auto_brightness.ino](auto_brightness/auto_brightness.ino)
+To control brightness we use `analogWrite()` — this is what was demonstrated at the start of class. It works on PWM-capable pins, marked `~` on the board (3, 5, 6, 9, 10, 11):
+
+```cpp
+analogWrite(pin, brightness);  // 0 = off, 255 = full brightness
+```
+
+> Curious how it works? See [PWM.md](PWM.md).
+
+Update `LO` and `HI` in the sketch with the values you noted from the Serial Plotter.
+
+Try writing the sketch yourself, then check your work:
+Reference: [auto_brightness/auto_brightness.ino](auto_brightness/auto_brightness.ino)
 
 `constrain(value, min, max)` clamps a value so it never goes outside the allowed range — a useful safety net after `map()`.
 
 ---
 
-## Auto / Manual modes
+## Manual Override
+
+A useful night light needs a way to override automatic mode. The button is on pin 13.
+
+Logic:
+- If the button is held → LED full brightness, regardless of light level.
+- Otherwise → automatic mode (smooth brightness from the light sensor).
+
+Try writing the sketch yourself, then check your work:
+Reference: [manual_override/manual_override.ino](manual_override/manual_override.ino)
+
+---
+
+## Auto / Manual Modes
 
 Give the button a more deliberate role: toggle between automatic and always-on modes.
 
-Sketch: [night_light/night_light.ino](night_light/night_light.ino)
+This introduces **edge detection** — responding to a change in state rather than a held state. A key technique in electronics.
 
-This introduces **edge detection** — responding to a change in state rather than a held state. A key technique in interactive hardware.
+> Two variables (`manualMode` and `lastButton`) are declared outside `loop()` — they need to keep their value between each run of the loop.
 
-> **If your mode toggle misfires:** that's button bounce (see Week 2). The `delay(50)` in the sketch already helps — increase it to 50–100 if needed.
+> **If your mode toggle misfires:** that's button bounce (see Week 2). The `delay(50)` in the sketch already helps — increase it to 100–150 if needed.
+
+Try writing the sketch yourself, then check your work:
+Reference: [night_light/night_light.ino](night_light/night_light.ino)
 
 ---
 
 ## Night-light connection
 
 > Today we built a functioning smart night light.
+
+---
+
+## Challenge — Night Light v2
+
+If you have finished early and want a harder problem, build a more capable version from scratch. There are no sketches for this one — use what you have learned and figure out the rest.
+
+**Requirements:**
+
+1. The built-in LED (pin 13) is always on whenever the board is powered.
+2. A button cycles through four modes: **OFF**, **ALWAYS ON**, **THRESHOLD**, and **AUTO**.
+3. In ALWAYS ON mode the pot controls brightness.
+4. In THRESHOLD mode the LED turns on when the room gets dark enough, and off when it gets bright — no dimming.
+5. In AUTO mode brightness tracks darkness smoothly via the light sensor.
+6. A different colored LED lights up to show which mode is currently active.
+
+**Stretch goal:** Accept a command typed into the Serial Monitor — `off`, `on`, `threshold`, or `auto` — to switch modes without pressing the button. Use a newline character as the end of each command.
+
+> **Hint for the stretch goal:** There are two ways to read serial input: `Serial.readStringUntil('\n')` and `Serial.available()`. One of them will cause your button to stop working. Figure out which one and why.
 
 ---
 

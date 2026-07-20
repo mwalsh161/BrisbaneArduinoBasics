@@ -1,2 +1,9 @@
-// Week3/light_sensor_read/light_sensor_read.ino
-// TODO: Complete this sketch together during the session.
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int light = analogRead(A5);
+  Serial.println(light);
+  delay(200);
+}
